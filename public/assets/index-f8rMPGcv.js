@@ -18931,16 +18931,6 @@ function g3() {
               l.jsxs("div", {
                 className: "bg-white rounded-2xl shadow-md p-6 w-full",
                 children: [
-                  H &&
-                    H.image &&
-                    l.jsx("div", {
-                      className: "flex justify-center mb-4",
-                      children: l.jsx("img", {
-                        src: H.image,
-                        alt: H.title || "Imagem",
-                        className: "w-full max-w-[320px] rounded-xl shadow-sm",
-                      }),
-                    }),
                   l.jsx("p", {
                     className: "text-sm text-gray-600 mb-3",
                     children:
