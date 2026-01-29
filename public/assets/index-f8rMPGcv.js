@@ -30006,7 +30006,7 @@ function EE() {
                                 duration: 0.5,
                               },
                               className:
-                                "bg-gray-50 border-l-4 border-blue-100 p-4 rounded-lg w-full",
+                                "bg-gray-50 border-l-4 border-gray-300 p-4 rounded-lg w-full",
                               children: l.jsx("p", {
                                 className:
                                   "text-gray-700 leading-relaxed text-base",
@@ -30042,8 +30042,11 @@ function EE() {
                         ),
                       }),
                       l.jsx("div", {
+                        className: "mt-2 h-[2px] w-full bg-gray-200",
+                      }),
+                      l.jsx("div", {
                         className:
-                          "mt-3 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
+                          "mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
                         children: l.jsx("div", {
                           className: "h-full bg-[#1351B4] rounded-full",
                           style: {
@@ -30052,13 +30055,28 @@ function EE() {
                         }),
                       }),
                       l.jsx("div", {
+                        className: "flex items-center justify-center gap-2 mt-3",
+                        children: Jr.map((c, u) =>
+                          l.jsx(
+                            "span",
+                            {
+                              className:
+                                u === e
+                                  ? "h-2 w-6 rounded-full bg-[#1351B4]"
+                                  : "h-2 w-2 rounded-full bg-gray-200",
+                            },
+                            u,
+                          ),
+                        ),
+                      }),
+                      l.jsx("div", {
                         className: "flex justify-center mt-6",
                         children: l.jsxs("button", {
                           type: "button",
                           onClick: a,
                           disabled: n !== "idle",
                           className:
-                            "button-continuar flex items-center justify-between gap-2 w-full h-12 px-6",
+                            "button-continuar relative flex items-center justify-center gap-2 w-full h-12 px-6",
                           children: [
                             n === "loading" &&
                               l.jsx(vt, {
@@ -30081,6 +30099,10 @@ function EE() {
                             n === "idle" &&
                               l.jsx("i", {
                                 className: "fas fa-chevron-right",
+                                style: {
+                                  position: "absolute",
+                                  right: "18px",
+                                },
                                 "aria-hidden": "true",
                               }),
                           ],
