@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teste de Upload de Comprovante</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 24px;
+        background: #f6f7fb;
+        color: #1f2937;
+      }
+      .card {
+        max-width: 560px;
+        background: #fff;
+        border-radius: 12px;
+        padding: 20px;
+        box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+      }
+      label {
+        display: block;
+        font-weight: 600;
+        margin-top: 12px;
+      }
+      input[type="text"],
+      input[type="email"],
+      input[type="file"] {
+        width: 100%;
+        margin-top: 6px;
+      }
+      button {
+        margin-top: 16px;
+        padding: 10px 14px;
+        background: #1351b4;
+        color: #fff;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+      }
+      pre {
+        margin-top: 16px;
+        background: #111827;
+        color: #e5e7eb;
+        padding: 12px;
+        border-radius: 8px;
+        overflow: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="card">
+      <h2>Teste de Upload do Comprovante</h2>
+      <p>Envie um arquivo para validar o endpoint.</p>
+
+      <label for="transaction_id">Transaction ID</label>
+      <input id="transaction_id" type="text" placeholder="ex.: 123456" />
+
+      <label for="customer_name">Nome</label>
+      <input id="customer_name" type="text" placeholder="Nome completo" />
+
+      <label for="customer_cpf">CPF</label>
+      <input id="customer_cpf" type="text" placeholder="00000000000" />
+
+      <label for="customer_email">Email</label>
+      <input id="customer_email" type="email" placeholder="email@exemplo.com" />
+
+      <label for="comprovante">Comprovante</label>
+      <input id="comprovante" type="file" accept="image/*,.pdf" />
+
+      <button id="send">Enviar</button>
+
+      <pre id="result">Aguardando envio...</pre>
+    </div>
+
+    <script>
+      const button = document.getElementById("send");
+      const result = document.getElementById("result");
+
+      button.addEventListener("click", async () => {
+        const fileInput = document.getElementById("comprovante");
+        if (!fileInput.files.length) {
+          result.textContent = "Selecione um arquivo.";
+          return;
+        }
+
+        const formData = new FormData();
+        formData.append("comprovante", fileInput.files[0]);
+        formData.append("transaction_id", document.getElementById("transaction_id").value || "teste");
+        formData.append("customer_name", document.getElementById("customer_name").value || "Teste");
+        formData.append("customer_cpf", document.getElementById("customer_cpf").value || "00000000000");
+        formData.append("customer_email", document.getElementById("customer_email").value || "teste@exemplo.com");
+
+        result.textContent = "Enviando...";
+
+        try {
+          const response = await fetch("/api/comprovantes/upload.php", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          result.textContent = JSON.stringify(data, null, 2);
+        } catch (error) {
+          result.textContent = `Erro: ${error.message}`;
+        }
+      });
+    </script>
+  </body>
+</html>
