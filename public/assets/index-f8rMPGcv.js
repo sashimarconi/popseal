@@ -30058,7 +30058,7 @@ function EE() {
                           onClick: a,
                           disabled: n !== "idle",
                           className:
-                            "button-continuar flex items-center justify-center gap-2 w-full h-12",
+                            "button-continuar flex items-center justify-between gap-2 w-full h-12 px-6",
                           children: [
                             n === "loading" &&
                               l.jsx(vt, {
@@ -30068,13 +30068,21 @@ function EE() {
                               l.jsx(It, {
                                 className: "h-4 w-4",
                               }),
-                            n === "loading"
-                              ? "Processando..."
-                              : n === "success"
-                                ? "Concluído"
-                                : e === Jr.length - 1
-                                  ? "Finalizar"
-                                  : "Avançar",
+                            l.jsx("span", {
+                              children:
+                                n === "loading"
+                                  ? "Processando..."
+                                  : n === "success"
+                                    ? "Concluído"
+                                    : e === Jr.length - 1
+                                      ? "Finalizar"
+                                      : "Avançar",
+                            }),
+                            n === "idle" &&
+                              l.jsx("i", {
+                                className: "fas fa-chevron-right",
+                                "aria-hidden": "true",
+                              }),
                           ],
                         }),
                       }),
