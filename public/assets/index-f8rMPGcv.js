@@ -30052,6 +30052,16 @@ function EE() {
                         ),
                       }),
                       l.jsx("div", {
+                        className:
+                          "mt-2 h-[2px] w-full bg-gray-200 rounded-full overflow-hidden",
+                        children: l.jsx("div", {
+                          className: "h-full bg-[#1351B4] rounded-full",
+                          style: {
+                            width: `${((e + 1) / Jr.length) * 100}%`,
+                          },
+                        }),
+                      }),
+                      l.jsx("div", {
                         className: "flex justify-center mt-6",
                         children: l.jsxs("button", {
                           type: "button",
