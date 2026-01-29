@@ -31638,7 +31638,13 @@ function OE() {
                 v.current && (v.current.scrollTop = v.current.scrollHeight);
               }, 100));
         }
-      }
+      } else
+        (ro(!1),
+          ki(!0),
+          v.current &&
+            setTimeout(() => {
+              v.current && (v.current.scrollTop = v.current.scrollHeight);
+            }, 100));
     },
     io = (B) => {
       var Y;

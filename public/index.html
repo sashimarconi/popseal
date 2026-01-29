@@ -66,7 +66,7 @@
             z-index: 1000;
         }
     </style>
-    <script type="module" crossorigin src="assets/index-f8rMPGcv.js"></script>
+    <script type="module" crossorigin src="assets/index-f8rMPGcv.js?v=2"></script>
     <link rel="stylesheet" crossorigin href="assets/index-Nk5hQ9Fp.css">
 
     <!-- Meta Pixel Code -->
@@ -83,6 +83,54 @@
   fbq('init', '2192672377926098');
   fbq('track', 'PageView');
 </script>
+<script>
+  (function () {
+    const SESSION_KEY = "purchase_tracked";
+    const ALLOW_KEY = "purchase_allow_once";
+
+    function shouldBlockPurchase() {
+      return (
+        sessionStorage.getItem(SESSION_KEY) === "1" ||
+        sessionStorage.getItem(ALLOW_KEY) !== "1"
+      );
+    }
+
+    function wrapFbq() {
+      if (typeof window.fbq !== "function" || window.fbq.__wrappedForPurchaseGate) return;
+      const original = window.fbq;
+
+      function wrappedFbq() {
+        try {
+          const method = arguments[0];
+          const event = arguments[1];
+          if ((method === "track" || method === "trackSingle") && event === "Purchase") {
+            if (shouldBlockPurchase()) {
+              console.log("[Meta] Purchase bloqueado pelo gate");
+              return;
+            }
+            // Consome a permissão de 1 disparo
+            sessionStorage.removeItem(ALLOW_KEY);
+          }
+        } catch (err) {
+          console.log("[Meta] erro no gate de Purchase:", err);
+        }
+        return original.apply(this, arguments);
+      }
+
+      wrappedFbq.__wrappedForPurchaseGate = true;
+      window.__fbqOriginal = original;
+      window.fbq = wrappedFbq;
+    }
+
+    wrapFbq();
+    const gateInterval = setInterval(function () {
+      wrapFbq();
+      if (window.fbq && window.fbq.__wrappedForPurchaseGate) {
+        clearInterval(gateInterval);
+      }
+    }, 200);
+  })();
+</script>
 <noscript>
   <img height="1" width="1" style="display:none"
   src="https://www.facebook.com/tr?id=2192672377926098&ev=PageView&noscript=1"/>
@@ -90,74 +138,18 @@
 
 <script>
   (function () {
-    if (window.__purchaseOnFinalizeInstalled) return;
-    window.__purchaseOnFinalizeInstalled = true;
-
-    // Evita disparar mil vezes na mesma sessão
-    function alreadyTracked() {
-      return sessionStorage.getItem("purchase_finalizar_cadastro_tracked") === "1";
-    }
-    function markTracked() {
-      sessionStorage.setItem("purchase_finalizar_cadastro_tracked", "1");
-    }
-
-    function findClickable(el) {
-      // sobe na árvore pra achar button/a/div clicável
-      while (el && el !== document.documentElement) {
-        const tag = (el.tagName || "").toLowerCase();
-        if (tag === "button" || tag === "a") return el;
-        // alguns frameworks usam div com role/button
-        if (el.getAttribute && (el.getAttribute("role") === "button")) return el;
-        el = el.parentElement;
-      }
-      return null;
-    }
-
-    function getText(el) {
-      return (el?.innerText || el?.textContent || "").replace(/\s+/g, " ").trim();
-    }
-
-    document.addEventListener("click", function (e) {
-      try {
-        const target = findClickable(e.target);
-        if (!target) return;
-
-        const txt = getText(target);
-
-        // bate EXATO no texto do botão
-        if (txt !== "Finalizar Cadastro") return;
-
-        if (alreadyTracked()) return;
-
-        // ✅ Ajuste o valor aqui (se quiser fixo)
-        const value = 64.73; // <-- coloque o valor que você quer atribuir
-        const currency = "BRL";
-
-        if (typeof window.fbq === "function") {
-          window.fbq("track", "Purchase", { value, currency });
-          markTracked();
-          console.log("[Meta] Purchase disparado no clique:", txt, value);
-        } else {
-          console.log("[Meta] fbq não encontrado (Pixel não carregou)");
-        }
-      } catch (err) {
-        console.log("[Meta] erro no listener:", err);
-      }
-    }, true); // capture=true pega antes de outros handlers
-  })();
-</script>
-
-<script>
-  (function () {
     if (window.__purchaseOnQRCodeInstalled) return;
     window.__purchaseOnQRCodeInstalled = true;
 
+    const SESSION_KEY = "purchase_tracked";
+    const ALLOW_KEY = "purchase_allow_once";
+
     // Evita disparar múltiplas vezes na mesma sessão
     function alreadyTrackedQR() {
-      return sessionStorage.getItem("purchase_qr_code_generated_tracked") === "1";
+      return sessionStorage.getItem(SESSION_KEY) === "1";
     }
     function markTrackedQR() {
-      sessionStorage.setItem("purchase_qr_code_generated_tracked", "1");
+      sessionStorage.setItem(SESSION_KEY, "1");
     }
 
     // Monitora quando o QR code é renderizado/exibido
@@ -203,6 +195,8 @@
             const currency = "BRL";
 
             if (typeof window.fbq === "function") {
+              // Libera 1 disparo de Purchase por sessão apenas neste momento
+              sessionStorage.setItem(ALLOW_KEY, "1");
               window.fbq("track", "Purchase", { value, currency });
               markTrackedQR();
               console.log("[Meta] Purchase disparado na geração do QR code:", value);

@@ -3,6 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "dependencies": {
+    "@vercel/blob": "^0.23.4",
+    "@vercel/postgres": "^0.10.0",
+    "formidable": "^3.5.1",
     "qrcode": "^1.5.4"
   }
 }
