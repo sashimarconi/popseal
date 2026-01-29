@@ -30019,61 +30019,67 @@ function EE() {
                     }),
                   ],
                 }),
-                l.jsx("div", {
-                  className: "flex items-center justify-center gap-2 mt-6",
-                  children: Jr.map((c, u) =>
-                    l.jsx(
-                      "span",
-                      {
-                        className:
-                          u === e
-                            ? "h-2 w-6 rounded-full bg-[#1351B4]"
-                            : "h-2 w-2 rounded-full bg-gray-200",
-                      },
-                      u,
-                    ),
-                  ),
-                }),
-                l.jsx("div", {
+                l.jsxs("div", {
                   className:
-                    "mt-3 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
-                  children: l.jsx("div", {
-                    className: "h-full bg-[#1351B4] rounded-full",
-                    style: {
-                      width: `${((e + 1) / Jr.length) * 100}%`,
-                    },
-                  }),
-                }),
-                l.jsx("div", {
-                  className: "flex justify-center mt-6",
-                  children: l.jsxs("button", {
-                    type: "button",
-                    onClick: a,
-                    disabled: n !== "idle",
-                    className:
-                      "button-continuar flex items-center justify-center gap-2 w-full h-12",
-                    children: [
-                      n === "loading" &&
-                        l.jsx(vt, {
-                          className: "h-4 w-4 animate-spin",
-                        }),
-                      n === "success" &&
-                        l.jsx(It, {
-                          className: "h-4 w-4",
-                        }),
-                      n === "loading"
-                        ? "Processando..."
-                        : n === "success"
-                          ? "Concluído"
-                          : e === Jr.length - 1
-                            ? "Finalizar"
-                            : "Avançar",
-                    ],
-                  }),
-                }),
-                l.jsx("p", {
-                  className: "text-center text-xs text-gray-500 mt-2",
-                  children: `Passo ${e + 1} de ${Jr.length}`,
+                    "sticky bottom-0 bg-gray-50 pt-4 pb-6 mt-4 z-10",
+                  children: [
+                    l.jsx("div", {
+                      className: "flex items-center justify-center gap-2",
+                      children: Jr.map((c, u) =>
+                        l.jsx(
+                          "span",
+                          {
+                            className:
+                              u === e
+                                ? "h-2 w-6 rounded-full bg-[#1351B4]"
+                                : "h-2 w-2 rounded-full bg-gray-200",
+                          },
+                          u,
+                        ),
+                      ),
+                    }),
+                    l.jsx("div", {
+                      className:
+                        "mt-3 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
+                      children: l.jsx("div", {
+                        className: "h-full bg-[#1351B4] rounded-full",
+                        style: {
+                          width: `${((e + 1) / Jr.length) * 100}%`,
+                        },
+                      }),
+                    }),
+                    l.jsx("div", {
+                      className: "flex justify-center mt-6",
+                      children: l.jsxs("button", {
+                        type: "button",
+                        onClick: a,
+                        disabled: n !== "idle",
+                        className:
+                          "button-continuar flex items-center justify-center gap-2 w-full h-12",
+                        children: [
+                          n === "loading" &&
+                            l.jsx(vt, {
+                              className: "h-4 w-4 animate-spin",
+                            }),
+                          n === "success" &&
+                            l.jsx(It, {
+                              className: "h-4 w-4",
+                            }),
+                          n === "loading"
+                            ? "Processando..."
+                            : n === "success"
+                              ? "Concluído"
+                              : e === Jr.length - 1
+                                ? "Finalizar"
+                                : "Avançar",
+                        ],
+                      }),
+                    }),
+                    l.jsx("p", {
+                      className: "text-center text-xs text-gray-500 mt-2",
+                      children: `Passo ${e + 1} de ${Jr.length}`,
+                    }),
+                  ],
                 }),
               ],
             }),
