@@ -34,6 +34,11 @@ function getFieldValue(value) {
   return value || "";
 }
 
+function getFileValue(file) {
+  if (Array.isArray(file)) return file[0];
+  return file;
+}
+
 module.exports = async (req, res) => {
   try {
     if (req.method !== "POST") {
@@ -61,7 +66,7 @@ module.exports = async (req, res) => {
       });
     });
 
-    const comprovante = files.comprovante;
+    const comprovante = getFileValue(files.comprovante);
     if (!comprovante) {
       return res.status(400).json({ success: false, error: "Arquivo de comprovante é obrigatório" });
     }
@@ -70,6 +75,9 @@ module.exports = async (req, res) => {
     const safeName = originalName.replace(/[^a-zA-Z0-9._-]/g, "_");
     const timestamp = new Date().toISOString().replace(/[:.]/g, "-");
     const tempPath = comprovante.filepath || comprovante.path;
+    if (!tempPath) {
+      return res.status(400).json({ success: false, error: "Arquivo inválido (sem path)" });
+    }
     const fileBuffer = await fs.readFile(tempPath);
     const blobName = `comprovantes/${timestamp}_${safeName}`;
 
