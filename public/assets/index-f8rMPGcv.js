@@ -18894,7 +18894,9 @@ function g3() {
           };
       }
     })(),
-    Y = b ? 5 : j ? 7 : 6;
+    Y = b ? 5 : j ? 7 : 6,
+    Q = typeof Jr < "u" && Array.isArray(Jr) ? Jr : [],
+    H = Q.length ? Q[Math.min(D.number - 1, Q.length - 1)] : null;
   return l.jsxs("div", {
     className: "min-h-screen bg-gray-50",
     children: [
@@ -18929,6 +18931,16 @@ function g3() {
               l.jsxs("div", {
                 className: "bg-white rounded-2xl shadow-md p-6 w-full",
                 children: [
+                  H &&
+                    H.image &&
+                    l.jsx("div", {
+                      className: "flex justify-center mb-4",
+                      children: l.jsx("img", {
+                        src: H.image,
+                        alt: H.title || "Imagem",
+                        className: "w-full max-w-[320px] rounded-xl shadow-sm",
+                      }),
+                    }),
                   l.jsx("p", {
                     className: "text-sm text-gray-600 mb-3",
                     children:
