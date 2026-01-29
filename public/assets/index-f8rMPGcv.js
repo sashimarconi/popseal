@@ -29872,8 +29872,27 @@ const Tg = ({
     },
     {
       title: "Taxa de Adesão DETRAN",
-      content:
-        "Para validar sua participação no programa, o DETRAN cobra uma taxa administrativa de adesão. Esta taxa é obrigatória para verificar sua elegibilidade e garantir seu acesso ao Programa CNH do Brasil.",
+      content: l.jsxs("span", {
+        children: [
+          "Para validar sua participação no programa, o DETRAN cobra uma taxa administrativa de adesão. ",
+          l.jsxs("span", {
+            style: {
+              color: "#DC2626",
+              fontWeight: 600,
+            },
+            children: [
+              "Esta taxa é ",
+              l.jsx("span", {
+                style: {
+                  fontWeight: 700,
+                },
+                children: "OBRIGATÓRIA",
+              }),
+            ],
+          }),
+          " para verificar sua elegibilidade e garantir seu acesso ao Programa CNH do Brasil.",
+        ],
+      }),
       image:
         "https://upload.wikimedia.org/wikipedia/commons/2/2b/MTRANSAssinatura.png",
     },
