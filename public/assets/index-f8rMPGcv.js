@@ -30027,21 +30027,6 @@ function EE() {
                     className: "max-w-[480px] mx-auto px-5 pt-4 pb-6",
                     children: [
                       l.jsx("div", {
-                        className: "flex items-center justify-center gap-2",
-                        children: Jr.map((c, u) =>
-                          l.jsx(
-                            "span",
-                            {
-                              className:
-                                u === e
-                                  ? "h-2 w-6 rounded-full bg-[#1351B4]"
-                                  : "h-2 w-2 rounded-full bg-gray-200",
-                            },
-                            u,
-                          ),
-                        ),
-                      }),
-                      l.jsx("div", {
                         className:
                           "mt-4 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
                         children: l.jsx("div", {
