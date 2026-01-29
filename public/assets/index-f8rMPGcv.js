@@ -30056,6 +30056,7 @@ function EE() {
                             width: `${((e + 1) / Jr.length) * 100}%`,
                             backgroundColor: "#1351B4",
                             borderRadius: "9999px",
+                            transition: "width 0.35s ease",
                           },
                         }),
                       }),
@@ -30093,13 +30094,26 @@ function EE() {
                                       : "Avançar",
                             }),
                             n === "idle" &&
-                              l.jsx("i", {
-                                className: "fas fa-chevron-right",
+                              l.jsx("span", {
                                 style: {
                                   position: "absolute",
                                   right: "18px",
+                                  display: "flex",
+                                  alignItems: "center",
                                 },
-                                "aria-hidden": "true",
+                                children: l.jsx("svg", {
+                                  width: "14",
+                                  height: "14",
+                                  viewBox: "0 0 24 24",
+                                  fill: "none",
+                                  stroke: "white",
+                                  strokeWidth: "2.5",
+                                  strokeLinecap: "round",
+                                  strokeLinejoin: "round",
+                                  children: l.jsx("polyline", {
+                                    points: "9 18 15 12 9 6",
+                                  }),
+                                }),
                               }),
                           ],
                         }),
