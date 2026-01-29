@@ -18893,8 +18893,10 @@ function g3() {
             number: R("phone"),
           };
       }
-    })();
+    })(),
+    Y = b ? 5 : j ? 7 : 6;
   return l.jsxs("div", {
+    className: "min-h-screen bg-gray-50",
     children: [
       l.jsx(rt, {}),
       l.jsx("div", {
@@ -18903,16 +18905,12 @@ function g3() {
           id: "main-signin",
           style: {
             width: "100%",
-            maxWidth: "800px",
+            maxWidth: "480px",
             margin: "0 auto",
+            padding: "1.25rem",
           },
           children: l.jsxs("div", {
-            className: "card",
-            style: {
-              width: "100%",
-              alignItems: "flex-start",
-              padding: "2rem",
-            },
+            className: "bg-white rounded-2xl shadow-lg p-6 w-full",
             children: [
               l.jsx("h3", {
                 className: "text-center w-full text-lg font-bold mb-6",
@@ -18938,7 +18936,7 @@ function g3() {
                       ],
                     }),
                     l.jsxs("div", {
-                      className: "space-y-3 pl-4",
+                      className: "space-y-3",
                       children: [
                         t === "name" &&
                           b &&
@@ -19050,7 +19048,7 @@ function g3() {
                         onClick: re,
                         disabled: a !== "idle",
                         className:
-                          "button-continuar flex items-center justify-center gap-2 min-w-[160px]",
+                          "button-continuar flex items-center justify-center gap-2 w-full h-12",
                         children: [
                           a === "loading" &&
                             l.jsx(vt, {
@@ -19067,6 +19065,36 @@ function g3() {
                               : "Confirmar",
                         ],
                       }),
+                    }),
+                    l.jsx("div", {
+                      className: "flex items-center justify-center gap-2 mt-4",
+                      children: Array.from({ length: Y }).map((R, L) =>
+                        l.jsx(
+                          "span",
+                          {
+                            className:
+                              "h-2 w-2 rounded-full " +
+                              (L + 1 === D.number
+                                ? "bg-[#1351B4]"
+                                : "bg-gray-200"),
+                          },
+                          L,
+                        ),
+                      ),
+                    }),
+                    l.jsx("div", {
+                      className:
+                        "mt-3 h-1 w-full bg-gray-200 rounded-full overflow-hidden",
+                      children: l.jsx("div", {
+                        className: "h-full bg-[#1351B4] rounded-full",
+                        style: {
+                          width: `${(D.number / Y) * 100}%`,
+                        },
+                      }),
+                    }),
+                    l.jsx("p", {
+                      className: "text-center text-xs text-gray-500 mt-2",
+                      children: `Passo ${D.number} de ${Y}`,
                     }),
                   ],
                 }),
