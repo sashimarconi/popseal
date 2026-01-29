@@ -30066,7 +30066,13 @@ function EE() {
                           onClick: a,
                           disabled: n !== "idle",
                           className:
-                            "button-continuar relative flex items-center justify-center gap-2 w-full h-12 px-6",
+                            "button-continuar relative flex items-center justify-center gap-2 w-full px-6",
+                          style: {
+                            height: "52px",
+                            borderRadius: "12px",
+                            fontSize: "15px",
+                            boxShadow: "0 6px 14px rgba(19, 81, 180, 0.35)",
+                          },
                           children: [
                             n === "loading" &&
                               l.jsx(vt, {
