@@ -170,6 +170,11 @@ async function handlePaymentRequest(req, res) {
       amount: amountCents,
       payment_method: "pix",
       postback_url: FREEPAY_POSTBACK_URL,
+      metadata: {
+        source: "popseal",
+        cpf: customer.taxId,
+        email: customer.email,
+      },
       customer: {
         name: customer.name,
         email: customer.email,
