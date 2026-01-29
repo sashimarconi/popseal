@@ -1,7 +1,7 @@
 // SealPay API Integration v1.0
 // Pagamento via PIX com SealPay Gateway
 
-const { sql } = require("@vercel/postgres");
+const db = require("./_db");
 
 const BASE_URL = process.env.SEALPAY_BASE_URL || "https://abacate-5eo1.onrender.com";
 
@@ -9,60 +9,50 @@ let leadsTableReady = false;
 
 async function ensureLeadsTable() {
   if (leadsTableReady) return;
-  await sql`
-    CREATE TABLE IF NOT EXISTS leads (
-      id SERIAL PRIMARY KEY,
-      created_at TIMESTAMPTZ DEFAULT NOW(),
-      source TEXT,
-      cpf TEXT,
-      nome TEXT,
-      email TEXT,
-      phone TEXT,
-      amount_cents INTEGER,
-      title TEXT,
-      transaction_id TEXT,
-      status TEXT,
-      tracking TEXT,
-      user_agent TEXT,
-      ip TEXT
-    )
-  `;
+  await db.query(
+    "CREATE TABLE IF NOT EXISTS leads (" +
+      "id SERIAL PRIMARY KEY, " +
+      "created_at TIMESTAMPTZ DEFAULT NOW(), " +
+      "source TEXT, " +
+      "cpf TEXT, " +
+      "nome TEXT, " +
+      "email TEXT, " +
+      "phone TEXT, " +
+      "amount_cents INTEGER, " +
+      "title TEXT, " +
+      "transaction_id TEXT, " +
+      "status TEXT, " +
+      "tracking TEXT, " +
+      "user_agent TEXT, " +
+      "ip TEXT" +
+    ")",
+  );
   leadsTableReady = true;
 }
 
 async function saveLead(data) {
-  if (!process.env.POSTGRES_URL && !process.env.POSTGRES_URL_NON_POOLING) return;
+  if (!db.getConnectionString()) return;
   try {
     await ensureLeadsTable();
-    await sql`
-      INSERT INTO leads (
-        source,
-        cpf,
-        nome,
-        email,
-        phone,
-        amount_cents,
-        title,
-        transaction_id,
-        status,
-        tracking,
-        user_agent,
-        ip
-      ) VALUES (
-        ${data.source || ""},
-        ${data.cpf || ""},
-        ${data.nome || ""},
-        ${data.email || ""},
-        ${data.phone || ""},
-        ${data.amount_cents || null},
-        ${data.title || ""},
-        ${data.transaction_id || ""},
-        ${data.status || ""},
-        ${data.tracking || ""},
-        ${data.user_agent || ""},
-        ${data.ip || ""}
-      )
-    `;
+    await db.query(
+      "INSERT INTO leads (" +
+        "source, cpf, nome, email, phone, amount_cents, title, transaction_id, status, tracking, user_agent, ip" +
+      ") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10,$11,$12)",
+      [
+        data.source || "",
+        data.cpf || "",
+        data.nome || "",
+        data.email || "",
+        data.phone || "",
+        data.amount_cents || null,
+        data.title || "",
+        data.transaction_id || "",
+        data.status || "",
+        data.tracking || "",
+        data.user_agent || "",
+        data.ip || "",
+      ],
+    );
   } catch (error) {
     console.error("[PAYMENT] Falha ao salvar lead:", error.message);
   }

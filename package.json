@@ -4,8 +4,8 @@
   "private": true,
   "dependencies": {
     "@vercel/blob": "^0.23.4",
-    "@vercel/postgres": "^0.10.0",
     "formidable": "^3.5.1",
+    "pg": "^8.17.2",
     "qrcode": "^1.5.4"
   }
 }

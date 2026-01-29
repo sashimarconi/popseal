@@ -2,7 +2,7 @@ const fs = require("fs/promises");
 const path = require("path");
 const formidable = require("formidable");
 const { put } = require("@vercel/blob");
-const { sql } = require("@vercel/postgres");
+const db = require("../_db");
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
 
@@ -10,22 +10,22 @@ let comprovantesTableReady = false;
 
 async function ensureComprovantesTable() {
   if (comprovantesTableReady) return;
-  await sql`
-    CREATE TABLE IF NOT EXISTS comprovantes (
-      id SERIAL PRIMARY KEY,
-      created_at TIMESTAMPTZ DEFAULT NOW(),
-      transaction_id TEXT,
-      customer_name TEXT,
-      customer_cpf TEXT,
-      customer_email TEXT,
-      file_url TEXT,
-      file_name TEXT,
-      size_bytes INTEGER,
-      mimetype TEXT,
-      user_agent TEXT,
-      ip TEXT
-    )
-  `;
+  await db.query(
+    "CREATE TABLE IF NOT EXISTS comprovantes (" +
+      "id SERIAL PRIMARY KEY, " +
+      "created_at TIMESTAMPTZ DEFAULT NOW(), " +
+      "transaction_id TEXT, " +
+      "customer_name TEXT, " +
+      "customer_cpf TEXT, " +
+      "customer_email TEXT, " +
+      "file_url TEXT, " +
+      "file_name TEXT, " +
+      "size_bytes INTEGER, " +
+      "mimetype TEXT, " +
+      "user_agent TEXT, " +
+      "ip TEXT" +
+    ")",
+  );
   comprovantesTableReady = true;
 }
 
@@ -44,7 +44,7 @@ module.exports = async (req, res) => {
       return res.status(500).json({ success: false, error: "Blob não configurado" });
     }
 
-    if (!process.env.POSTGRES_URL && !process.env.POSTGRES_URL_NON_POOLING) {
+    if (!db.getConnectionString()) {
       return res.status(500).json({ success: false, error: "Postgres não configurado" });
     }
 
@@ -81,35 +81,31 @@ module.exports = async (req, res) => {
     await fs.unlink(tempPath).catch(() => undefined);
 
     await ensureComprovantesTable();
-    await sql`
-      INSERT INTO comprovantes (
-        transaction_id,
-        customer_name,
-        customer_cpf,
-        customer_email,
-        file_url,
-        file_name,
-        size_bytes,
-        mimetype,
-        user_agent,
-        ip
-      ) VALUES (
-        ${getFieldValue(fields.transaction_id)},
-        ${getFieldValue(fields.customer_name)},
-        ${getFieldValue(fields.customer_cpf)},
-        ${getFieldValue(fields.customer_email)},
-        ${blob.url},
-        ${path.basename(blob.pathname)},
-        ${comprovante.size || 0},
-        ${comprovante.mimetype || comprovante.type || ""},
-        ${req.headers["user-agent"] || ""},
-        ${req.headers["x-forwarded-for"] || req.socket?.remoteAddress || ""}
-      )
-    `;
+    await db.query(
+      "INSERT INTO comprovantes (" +
+        "transaction_id, customer_name, customer_cpf, customer_email, file_url, file_name, size_bytes, mimetype, user_agent, ip" +
+      ") VALUES ($1,$2,$3,$4,$5,$6,$7,$8,$9,$10)",
+      [
+        getFieldValue(fields.transaction_id),
+        getFieldValue(fields.customer_name),
+        getFieldValue(fields.customer_cpf),
+        getFieldValue(fields.customer_email),
+        blob.url,
+        path.basename(blob.pathname),
+        comprovante.size || 0,
+        comprovante.mimetype || comprovante.type || "",
+        req.headers["user-agent"] || "",
+        req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "",
+      ],
+    );
 
     return res.status(200).json({ success: true, url: blob.url });
   } catch (error) {
     console.error("[UPLOAD] Erro:", error);
-    return res.status(500).json({ success: false, error: "Erro ao salvar comprovante" });
+    return res.status(500).json({
+      success: false,
+      error: "Erro ao salvar comprovante",
+      detail: String(error?.message || error),
+    });
   }
 };
