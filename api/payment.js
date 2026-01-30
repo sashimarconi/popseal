@@ -4,6 +4,78 @@
 const db = require("./_db");
 
 const BASE_URL = process.env.BLACKCAT_BASE_URL || "https://api.blackcatpagamentos.online/api";
+const UTMIFY_API_URL = "https://api.utmify.com.br/api-credentials/orders";
+
+function formatUtcDate(date) {
+  const iso = new Date(date).toISOString();
+  return iso.replace("T", " ").substring(0, 19);
+}
+
+function buildTrackingParameters(tracking) {
+  const utm = tracking && typeof tracking.utm === "object" && tracking.utm ? tracking.utm : {};
+  return {
+    src: tracking?.src || utm?.src || null,
+    sck: tracking?.sck || utm?.sck || null,
+    utm_source: utm?.utm_source || utm?.source || null,
+    utm_campaign: utm?.utm_campaign || null,
+    utm_medium: utm?.utm_medium || null,
+    utm_content: utm?.utm_content || null,
+    utm_term: utm?.utm_term || null,
+  };
+}
+
+async function sendUtmifyOrder({
+  token,
+  orderId,
+  status,
+  createdAt,
+  approvedDate,
+  customer,
+  products,
+  trackingParameters,
+  totalPriceInCents,
+  gatewayFeeInCents = 0,
+  userCommissionInCents,
+  paymentMethod = "pix",
+  platform = "Blackcat",
+}) {
+  if (!token) return;
+  const payload = {
+    orderId: String(orderId),
+    platform,
+    paymentMethod,
+    status,
+    createdAt: formatUtcDate(createdAt),
+    approvedDate: approvedDate ? formatUtcDate(approvedDate) : null,
+    refundedAt: null,
+    customer,
+    products,
+    trackingParameters,
+    commission: {
+      totalPriceInCents,
+      gatewayFeeInCents,
+      userCommissionInCents,
+    },
+    isTest: false,
+  };
+
+  try {
+    const resp = await fetch(UTMIFY_API_URL, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-api-token": token,
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await resp.json().catch(() => ({}));
+    if (!resp.ok) {
+      console.error("[UTMIFY] Erro ao enviar pedido:", resp.status, data);
+    }
+  } catch (error) {
+    console.error("[UTMIFY] Falha ao enviar pedido:", error.message || error);
+  }
+}
 
 let leadsTableReady = false;
 
@@ -301,6 +373,43 @@ async function handlePaymentRequest(req, res) {
       title: FIXED_TITLE,
       transaction_id: String(tx),
       status: String(txData?.status || "PENDING"),
+    });
+
+    const UTMIFY_API_TOKEN = process.env.UTMIFY_API_TOKEN;
+    const customerForUtmify = {
+      name: customer.name,
+      email: customer.email,
+      phone: customer.cellphone || null,
+      document: customer.taxId || null,
+      country: "BR",
+      ip: req.headers["x-forwarded-for"] || req.socket?.remoteAddress || null,
+    };
+    const productsForUtmify = [
+      {
+        id: "taxa_adesao",
+        name: FIXED_TITLE,
+        planId: null,
+        planName: null,
+        quantity: 1,
+        priceInCents: amountCents,
+      },
+    ];
+    const trackingParameters = buildTrackingParameters(tracking || {});
+
+    await sendUtmifyOrder({
+      token: UTMIFY_API_TOKEN,
+      orderId: String(tx),
+      status: "waiting_payment",
+      createdAt: new Date(),
+      approvedDate: null,
+      customer: customerForUtmify,
+      products: productsForUtmify,
+      trackingParameters,
+      totalPriceInCents: amountCents,
+      gatewayFeeInCents: 0,
+      userCommissionInCents: amountCents,
+      paymentMethod: "pix",
+      platform: "Blackcat",
     });
 
     return res.status(200).json({
