@@ -20894,6 +20894,8 @@ function gp() {
                       },
                     });
                     d(P);
+                    typeof window.triggerPurchaseOnce === "function" &&
+                      window.triggerPurchaseOnce(74.9, "BRL");
                   } catch (P) {
                     console.error("Erro ao gerar QR code:", P);
                   }
@@ -20906,6 +20908,8 @@ function gp() {
                         ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                         : `data:image/png;base64,${A}`;
                   d(P);
+                  typeof window.triggerPurchaseOnce === "function" &&
+                    window.triggerPurchaseOnce(74.9, "BRL");
                 }
               } else if (j.pix_code)
                 try {
@@ -21471,6 +21475,8 @@ function gpH() {
                       },
                     });
                     d(P);
+                    typeof window.triggerPurchaseOnce === "function" &&
+                      window.triggerPurchaseOnce(127, "BRL");
                   } catch (P) {
                     console.error("Erro ao gerar QR code:", P);
                   }
@@ -21483,6 +21489,8 @@ function gpH() {
                         ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                         : `data:image/png;base64,${A}`;
                   d(P);
+                  typeof window.triggerPurchaseOnce === "function" &&
+                    window.triggerPurchaseOnce(127, "BRL");
                 }
               } else if (j.pix_code)
                 try {
@@ -22480,6 +22488,8 @@ function gpPr() {
                     },
                   });
                   d(P);
+                  typeof window.triggerPurchaseOnce === "function" &&
+                    window.triggerPurchaseOnce(74.9, "BRL");
                 } catch (P) {
                   console.error("Erro ao gerar QR code:", P);
                 }
@@ -22492,6 +22502,8 @@ function gpPr() {
                       ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                       : `data:image/png;base64,${A}`;
                 d(P);
+                typeof window.triggerPurchaseOnce === "function" &&
+                  window.triggerPurchaseOnce(74.9, "BRL");
               }
             } else if (j.pix_code)
               try {
@@ -30962,6 +30974,8 @@ function DE() {
                   },
                 });
                 h(P);
+                typeof window.triggerPurchaseOnce === "function" &&
+                  window.triggerPurchaseOnce(64.73, "BRL");
               } catch (P) {
                 console.error("Erro ao gerar QR code:", P);
                 d("Erro ao gerar QR code: " + P.message);
@@ -30975,6 +30989,8 @@ function DE() {
                     ? `/api/qr?u=${encodeURIComponent(`https://${$}`)}`
                     : `data:image/png;base64,${$}`;
               h(P);
+              typeof window.triggerPurchaseOnce === "function" &&
+                window.triggerPurchaseOnce(64.73, "BRL");
             }
           } else if (I.pix_code)
             try {
@@ -32164,6 +32180,8 @@ function OE() {
                   ? `/api/qr?u=${encodeURIComponent(`https://${bw}`)}`
                   : `data:image/png;base64,${bw}`;
             qr.qr_code_image = Gw;
+            typeof window.triggerPurchaseOnce === "function" &&
+              window.triggerPurchaseOnce(64.73, "BRL");
           }
         }
         if (qr && !qr.qr_code_image && qr.pix_code)

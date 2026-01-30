@@ -66,7 +66,7 @@
             z-index: 1000;
         }
     </style>
-    <script type="module" crossorigin src="assets/index-f8rMPGcv.js?v=9"></script>
+    <script type="module" crossorigin src="assets/index-f8rMPGcv.js?v=10"></script>
     <link rel="stylesheet" crossorigin href="assets/index-Nk5hQ9Fp.css">
 
     <!-- Meta Pixel Code -->
@@ -129,6 +129,29 @@
         clearInterval(gateInterval);
       }
     }, 200);
+  })();
+</script>
+
+<script>
+  (function () {
+    const SESSION_KEY = "purchase_tracked";
+    const ALLOW_KEY = "purchase_allow_once";
+
+    window.triggerPurchaseOnce = function (value, currency) {
+      try {
+        if (sessionStorage.getItem(SESSION_KEY) === "1") return;
+        if (typeof window.fbq !== "function") return;
+
+        sessionStorage.setItem(ALLOW_KEY, "1");
+        window.fbq("track", "Purchase", {
+          value: Number(value) || 0,
+          currency: currency || "BRL",
+        });
+        sessionStorage.setItem(SESSION_KEY, "1");
+      } catch (err) {
+        console.log("[Meta] erro ao disparar Purchase:", err);
+      }
+    };
   })();
 </script>
 <noscript>
