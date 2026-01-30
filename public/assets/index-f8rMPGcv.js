@@ -20875,9 +20875,9 @@ function gp() {
                   ? A.startsWith("data:image")
                     ? A
                     : A.startsWith("http")
-                      ? encodeURI(A)
+                      ? `/api/qr?u=${encodeURIComponent(A)}`
                       : A.includes("/")
-                        ? encodeURI(`https://${A}`)
+                        ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                       : `data:image/png;base64,${A}`
                   : A;
                 d(P);
@@ -21438,9 +21438,9 @@ function gpH() {
                   ? A.startsWith("data:image")
                     ? A
                     : A.startsWith("http")
-                      ? encodeURI(A)
+                      ? `/api/qr?u=${encodeURIComponent(A)}`
                       : A.includes("/")
-                        ? encodeURI(`https://${A}`)
+                        ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                       : `data:image/png;base64,${A}`
                   : A;
                 d(P);
@@ -22433,9 +22433,9 @@ function gpPr() {
                 ? A.startsWith("data:image")
                   ? A
                   : A.startsWith("http")
-                    ? encodeURI(A)
+                    ? `/api/qr?u=${encodeURIComponent(A)}`
                     : A.includes("/")
-                      ? encodeURI(`https://${A}`)
+                      ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
                     : `data:image/png;base64,${A}`
                 : A;
               d(P);
@@ -30901,9 +30901,9 @@ function DE() {
               ? $.startsWith("data:image")
                 ? $
                 : $.startsWith("http")
-                  ? encodeURI($)
+                  ? `/api/qr?u=${encodeURIComponent($)}`
                   : $.includes("/")
-                    ? encodeURI(`https://${$}`)
+                    ? `/api/qr?u=${encodeURIComponent(`https://${$}`)}`
                   : `data:image/png;base64,${$}`
               : $;
             h(P);
