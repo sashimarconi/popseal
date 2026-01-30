@@ -258,6 +258,10 @@ async function handlePaymentRequest(req, res) {
       txData?.pix_qr_code ||
       txData?.qr_code ||
       "";
+    const looksLikeBase64 = (value) =>
+      typeof value === "string" &&
+      value.length > 100 &&
+      /^[A-Za-z0-9+/=\s]+$/.test(value);
     const pixQrWithPrefix = pixQr
       ? pixQr.startsWith("data:image")
         ? pixQr
@@ -265,7 +269,9 @@ async function handlePaymentRequest(req, res) {
           ? pixQr
           : pixQr.startsWith("base64,")
             ? `data:image/png;${pixQr}`
-            : pixQr
+            : looksLikeBase64(pixQr)
+              ? `data:image/png;base64,${pixQr.trim()}`
+              : pixQr
       : "";
 
     if (!tx || !pixText) {

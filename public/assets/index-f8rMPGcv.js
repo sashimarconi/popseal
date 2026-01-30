@@ -20869,7 +20869,17 @@ function gp() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code || j.qr_code)) d(j.pix_qr_code || j.qr_code);
+              if ((n(j), j.pix_qr_code || j.qr_code)) {
+                const A = j.pix_qr_code || j.qr_code;
+                const P = A
+                  ? A.startsWith("data:image")
+                    ? A
+                    : A.startsWith("http")
+                      ? A
+                      : `data:image/png;base64,${A}`
+                  : A;
+                d(P);
+              }
               else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
@@ -21420,7 +21430,17 @@ function gpH() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code || j.qr_code)) d(j.pix_qr_code || j.qr_code);
+              if ((n(j), j.pix_qr_code || j.qr_code)) {
+                const A = j.pix_qr_code || j.qr_code;
+                const P = A
+                  ? A.startsWith("data:image")
+                    ? A
+                    : A.startsWith("http")
+                      ? A
+                      : `data:image/png;base64,${A}`
+                  : A;
+                d(P);
+              }
               else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
@@ -22403,8 +22423,17 @@ function gpPr() {
               })
             ).json();
           if (j.success) {
-            if ((n(j), j.pix_qr_code || j.qr_code))
-              d(j.pix_qr_code || j.qr_code);
+            if ((n(j), j.pix_qr_code || j.qr_code)) {
+              const A = j.pix_qr_code || j.qr_code;
+              const P = A
+                ? A.startsWith("data:image")
+                  ? A
+                  : A.startsWith("http")
+                    ? A
+                    : `data:image/png;base64,${A}`
+                : A;
+              d(P);
+            }
             else if (j.pix_code)
               try {
                 const A = await Zs.toDataURL(j.pix_code, {
@@ -30860,7 +30889,17 @@ function DE() {
         console.log("Resposta da API:", I);
 
         if (I.success) {
-          if ((n(I), I.pix_qr_code || I.qr_code)) h(I.pix_qr_code || I.qr_code);
+          if ((n(I), I.pix_qr_code || I.qr_code)) {
+            const $ = I.pix_qr_code || I.qr_code;
+            const P = $
+              ? $.startsWith("data:image")
+                ? $
+                : $.startsWith("http")
+                  ? $
+                  : `data:image/png;base64,${$}`
+              : $;
+            h(P);
+          }
           else if (I.pix_code)
             try {
               const $ = await Zs.toDataURL(I.pix_code, {
