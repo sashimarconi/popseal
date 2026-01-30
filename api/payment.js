@@ -249,9 +249,23 @@ async function handlePaymentRequest(req, res) {
       txData?.qr_code ||
       (typeof txData?.pix === "object" ? txData?.pix?.qr_code || txData?.pix?.code : "") ||
       "";
-    const pixQr = pixInfo?.url || txData?.pix_qr_code || "";
-    const pixQrWithPrefix = pixQr && pixQr.startsWith("data:image")
-      ? pixQr
+    const pixQr =
+      pixInfo?.qr_code_base64 ||
+      pixInfo?.qr_code ||
+      pixInfo?.qrcode ||
+      pixInfo?.qr_code_url ||
+      pixInfo?.url ||
+      txData?.pix_qr_code ||
+      txData?.qr_code ||
+      "";
+    const pixQrWithPrefix = pixQr
+      ? pixQr.startsWith("data:image")
+        ? pixQr
+        : pixQr.startsWith("http")
+          ? pixQr
+          : pixQr.startsWith("base64,")
+            ? `data:image/png;${pixQr}`
+            : pixQr
       : "";
 
     if (!tx || !pixText) {
@@ -280,7 +294,7 @@ async function handlePaymentRequest(req, res) {
       pix_code: String(pixText),
       amount: txData?.amount || amountCents,
       status: String(txData?.status || "PENDING"),
-      qr_code: pixQrWithPrefix || String(pixText),
+      qr_code: pixQrWithPrefix,
       pix_qr_code: pixQrWithPrefix,
     });
 

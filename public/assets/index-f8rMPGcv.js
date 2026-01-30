@@ -20853,7 +20853,7 @@ function gp() {
             }
             const b = JSON.parse(m),
               j = await (
-                await fetch("/api/payment/payment_second.php", {
+                await fetch("/api/payment", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -20869,7 +20869,7 @@ function gp() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code)) d(j.pix_qr_code);
+              if ((n(j), j.pix_qr_code || j.qr_code)) d(j.pix_qr_code || j.qr_code);
               else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
@@ -21404,7 +21404,7 @@ function gpH() {
             }
             const b = JSON.parse(m),
               j = await (
-                await fetch("/api/payment/payment_second.php", {
+                await fetch("/api/payment", {
                   method: "POST",
                   headers: {
                     "Content-Type": "application/json",
@@ -21420,7 +21420,7 @@ function gpH() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code)) d(j.pix_qr_code);
+              if ((n(j), j.pix_qr_code || j.qr_code)) d(j.pix_qr_code || j.qr_code);
               else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
@@ -21902,7 +21902,7 @@ function gpP() {
           }
           const b = JSON.parse(m),
             j = await (
-              await fetch("/api/payment/payment_second.php", {
+              await fetch("/api/payment", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -22387,7 +22387,7 @@ function gpPr() {
           }
           const b = JSON.parse(m),
             j = await (
-              await fetch("/api/payment/payment_second.php", {
+              await fetch("/api/payment", {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -22403,7 +22403,9 @@ function gpPr() {
               })
             ).json();
           if (j.success) {
-            if ((n(j), j.pix_code))
+            if ((n(j), j.pix_qr_code || j.qr_code))
+              d(j.pix_qr_code || j.qr_code);
+            else if (j.pix_code)
               try {
                 const A = await Zs.toDataURL(j.pix_code, {
                   width: 256,
@@ -30845,7 +30847,7 @@ function DE() {
         };
         console.log("Enviando para API:", requestPayload);
         
-        const paymentResponse = await fetch("/api/payment/payment.php", {
+        const paymentResponse = await fetch("/api/payment", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -30856,9 +30858,10 @@ function DE() {
         console.log("Status da resposta:", paymentResponse.status);
         const I = await paymentResponse.json();
         console.log("Resposta da API:", I);
-        
+
         if (I.success) {
-          if ((n(I), I.pix_code))
+          if ((n(I), I.pix_qr_code || I.qr_code)) h(I.pix_qr_code || I.qr_code);
+          else if (I.pix_code)
             try {
               const $ = await Zs.toDataURL(I.pix_code, {
                 width: 256,
@@ -32008,7 +32011,7 @@ function OE() {
           `Creating PIX transaction for: ${ge.nome} (attempt ${B + 1}/${W})`,
         );
         const qr = await (
-          await fetch("/api/payment/payment.php", {
+          await fetch("/api/payment", {
             method: "POST",
             headers: {
               "Content-Type": "application/json",
