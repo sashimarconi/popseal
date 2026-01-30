@@ -30906,20 +30906,35 @@ function DE() {
         console.log("Resposta da API:", I);
 
         if (I.success) {
-          if ((n(I), I.pix_qr_code || I.qr_code)) {
-            const $ = I.pix_qr_code || I.qr_code;
-            const P = $
-              ? $.startsWith("data:image")
+          n(I);
+          const $ = I.pix_qr_code || I.qr_code;
+          if ($) {
+            if ($.startsWith("000201") || $.includes("br.gov.bcb.pix")) {
+              try {
+                const P = await Zs.toDataURL($, {
+                  width: 256,
+                  margin: 2,
+                  color: {
+                    dark: "#000000",
+                    light: "#FFFFFF",
+                  },
+                });
+                h(P);
+              } catch (P) {
+                console.error("Erro ao gerar QR code:", P);
+                d("Erro ao gerar QR code: " + P.message);
+              }
+            } else {
+              const P = $.startsWith("data:image")
                 ? $
                 : $.startsWith("http")
                   ? `/api/qr?u=${encodeURIComponent($)}`
                   : $.includes("/")
                     ? `/api/qr?u=${encodeURIComponent(`https://${$}`)}`
-                  : `data:image/png;base64,${$}`
-              : $;
-            h(P);
-          }
-          else if (I.pix_code)
+                    : `data:image/png;base64,${$}`;
+              h(P);
+            }
+          } else if (I.pix_code)
             try {
               const $ = await Zs.toDataURL(I.pix_code, {
                 width: 256,
