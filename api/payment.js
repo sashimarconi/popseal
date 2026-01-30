@@ -1,9 +1,9 @@
-// SealPay API Integration v1.0
-// Pagamento via PIX com SealPay Gateway
+// Blackcat API Integration
+// Pagamento via PIX com Blackcat Gateway
 
 const db = require("./_db");
 
-const BASE_URL = process.env.FREEPAY_BASE_URL || "https://api.freepaybrasil.com";
+const BASE_URL = process.env.BLACKCAT_BASE_URL || "https://api.blackcatpagamentos.online/api";
 
 let leadsTableReady = false;
 
@@ -70,21 +70,20 @@ async function handlePaymentRequest(req, res) {
   }
 
   try {
-    const FREEPAY_USERNAME = process.env.FREEPAY_USERNAME;
-    const FREEPAY_PASSWORD = process.env.FREEPAY_PASSWORD;
-    const FREEPAY_POSTBACK_URL = process.env.FREEPAY_POSTBACK_URL;
+    const BLACKCAT_API_KEY = process.env.BLACKCAT_API_KEY;
+    const BLACKCAT_POSTBACK_URL = process.env.BLACKCAT_POSTBACK_URL;
 
-    if (!FREEPAY_USERNAME || !FREEPAY_PASSWORD) {
+    if (!BLACKCAT_API_KEY) {
       return res.status(500).json({
         success: false,
-        message: "Credenciais da FreePay não configuradas",
+        message: "Credenciais da Blackcat não configuradas",
       });
     }
 
-    if (!FREEPAY_POSTBACK_URL) {
+    if (!BLACKCAT_POSTBACK_URL) {
       return res.status(500).json({
         success: false,
-        message: "FREEPAY_POSTBACK_URL não configurada",
+        message: "BLACKCAT_POSTBACK_URL não configurada",
       });
     }
 
@@ -167,33 +166,43 @@ async function handlePaymentRequest(req, res) {
       return { utm, src };
     })();
 
+    const documentType = customer.taxId && customer.taxId.length > 11 ? "cnpj" : "cpf";
     const payload = {
       amount: amountCents,
-      payment_method: "pix",
-      postback_url: FREEPAY_POSTBACK_URL,
-      metadata: {
-        source: "popseal",
-        cpf: customer.taxId,
-        email: customer.email,
-      },
+      currency: "BRL",
+      paymentMethod: "pix",
+      items: [
+        {
+          title: FIXED_TITLE,
+          unitPrice: amountCents,
+          quantity: 1,
+          tangible: false,
+        },
+      ],
       customer: {
         name: customer.name,
         email: customer.email,
         phone: customer.cellphone,
         document: {
-          type: "cpf",
+          type: documentType,
           number: customer.taxId,
         },
       },
-      items: [
-        {
-          title: FIXED_TITLE,
-          unit_price: amountCents,
-          quantity: 1,
-          tangible: false,
-          external_ref: "taxa_adesao",
-        },
-      ],
+      pix: {
+        expiresInDays: 1,
+      },
+      postbackUrl: BLACKCAT_POSTBACK_URL,
+      externalRef: "taxa_adesao",
+      metadata: JSON.stringify({
+        source: "popseal",
+        cpf: customer.taxId,
+        email: customer.email,
+      }),
+      utm_source: tracking?.utm?.utm_source || tracking?.utm?.source || tracking?.src || undefined,
+      utm_medium: tracking?.utm?.utm_medium || undefined,
+      utm_campaign: tracking?.utm?.utm_campaign || undefined,
+      utm_content: tracking?.utm?.utm_content || undefined,
+      utm_term: tracking?.utm?.utm_term || undefined,
     };
 
     const userAgent = bodyData.user_agent || req.headers["user-agent"] || "";
@@ -212,15 +221,14 @@ async function handlePaymentRequest(req, res) {
       ip: req.headers["x-forwarded-for"] || req.socket?.remoteAddress || "",
     });
 
-    console.log("[PAYMENT] Enviando para FreePay...");
+    console.log("[PAYMENT] Enviando para Blackcat...");
 
-    const authHeader = Buffer.from(`${FREEPAY_USERNAME}:${FREEPAY_PASSWORD}`).toString("base64");
-    const resp = await fetch(`${BASE_URL}/v1/payment-transaction/create`, {
+    const resp = await fetch(`${BASE_URL}/sales/create-sale`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Basic ${authHeader}`,
+        "X-API-Key": BLACKCAT_API_KEY,
       },
       body: JSON.stringify(payload),
     });
@@ -228,7 +236,7 @@ async function handlePaymentRequest(req, res) {
     const data = await resp.json().catch(() => ({}));
 
     if (!resp.ok) {
-      console.error("[PAYMENT] Erro FreePay:", resp.status, data);
+      console.error("[PAYMENT] Erro Blackcat:", resp.status, data);
       return res.status(502).json({
         success: false,
         message: data?.error || "Falha ao criar PIX",
@@ -237,25 +245,17 @@ async function handlePaymentRequest(req, res) {
     }
 
     const txData = Array.isArray(data?.data) ? data.data[0] : data?.data || data;
-    const tx = txData?.id || txData?.transaction_id || txData?.txid;
-    const pixInfo = Array.isArray(txData?.pix) ? txData.pix[0] : txData?.pix || {};
+    const tx = txData?.transactionId || txData?.id || txData?.transaction_id || txData?.txid;
+    const paymentData = txData?.paymentData || {};
     const pixText =
-      pixInfo?.qr_code ||
-      pixInfo?.emv ||
-      pixInfo?.brcode ||
-      pixInfo?.code ||
-      pixInfo?.copy_and_paste ||
+      paymentData?.copyPaste ||
+      paymentData?.qrCode ||
       txData?.pix_code ||
       txData?.qr_code ||
-      (typeof txData?.pix === "object" ? txData?.pix?.qr_code || txData?.pix?.code : "") ||
       "";
     const pixQr =
-      pixInfo?.qr_code_image ||
-      pixInfo?.qr_code_base64 ||
-      pixInfo?.qr_code ||
-      pixInfo?.qrcode ||
-      pixInfo?.qr_code_url ||
-      pixInfo?.url ||
+      paymentData?.qrCodeBase64 ||
+      paymentData?.qrCode ||
       txData?.pix_qr_code ||
       txData?.qr_code_image ||
       txData?.qr_code ||

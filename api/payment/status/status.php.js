@@ -1,28 +1,25 @@
-const BASE_URL = process.env.FREEPAY_BASE_URL || "https://api.freepaybrasil.com";
+const BASE_URL = process.env.BLACKCAT_BASE_URL || "https://api.blackcatpagamentos.online/api";
 
 module.exports = async (req, res) => {
   try {
     if (req.method !== "GET") return res.status(405).send("Method Not Allowed");
 
-    const FREEPAY_USERNAME = process.env.FREEPAY_USERNAME;
-    const FREEPAY_PASSWORD = process.env.FREEPAY_PASSWORD;
-    if (!FREEPAY_USERNAME || !FREEPAY_PASSWORD) {
-      return res.status(500).json({ success: false, message: "Credenciais da FreePay não configuradas" });
+    const BLACKCAT_API_KEY = process.env.BLACKCAT_API_KEY;
+    if (!BLACKCAT_API_KEY) {
+      return res.status(500).json({ success: false, message: "Credenciais da Blackcat não configuradas" });
     }
 
     const id = String(req.query.id || req.query.transaction_id || "").trim();
     if (!id) return res.status(400).json({ success: false, message: "id é obrigatório" });
 
-    const url = `${BASE_URL}/v1/payment-transaction/info/${encodeURIComponent(id)}`;
-
-    const authHeader = Buffer.from(`${FREEPAY_USERNAME}:${FREEPAY_PASSWORD}`).toString("base64");
+    const url = `${BASE_URL}/sales/${encodeURIComponent(id)}/status`;
 
     const response = await fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
-        Authorization: `Basic ${authHeader}`,
+        "X-API-Key": BLACKCAT_API_KEY,
       },
     });
 
