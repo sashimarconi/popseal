@@ -87,6 +87,7 @@
   (function () {
     const SESSION_KEY = "purchase_tracked";
     const ALLOW_KEY = "purchase_allow_once";
+    const PENDING_KEY = "purchase_pending_payload";
 
     function shouldBlockPurchase() {
       return (
@@ -137,21 +138,49 @@
     const SESSION_KEY = "purchase_tracked";
     const ALLOW_KEY = "purchase_allow_once";
 
-    window.triggerPurchaseOnce = function (value, currency) {
+    function flushPendingPurchase() {
       try {
         if (sessionStorage.getItem(SESSION_KEY) === "1") return;
         if (typeof window.fbq !== "function") return;
-
+        const pending = sessionStorage.getItem(PENDING_KEY);
+        if (!pending) return;
+        const payload = JSON.parse(pending);
         sessionStorage.setItem(ALLOW_KEY, "1");
-        window.fbq("track", "Purchase", {
+        window.fbq("track", "Purchase", payload);
+        sessionStorage.setItem(SESSION_KEY, "1");
+        sessionStorage.removeItem(PENDING_KEY);
+      } catch (err) {
+        console.log("[Meta] erro ao disparar Purchase pendente:", err);
+      }
+    }
+
+    window.triggerPurchaseOnce = function (value, currency) {
+      try {
+        if (sessionStorage.getItem(SESSION_KEY) === "1") return;
+        const payload = {
           value: Number(value) || 0,
           currency: currency || "BRL",
-        });
+        };
+
+        if (typeof window.fbq !== "function") {
+          sessionStorage.setItem(PENDING_KEY, JSON.stringify(payload));
+          return;
+        }
+
+        sessionStorage.setItem(ALLOW_KEY, "1");
+        window.fbq("track", "Purchase", payload);
         sessionStorage.setItem(SESSION_KEY, "1");
       } catch (err) {
         console.log("[Meta] erro ao disparar Purchase:", err);
       }
     };
+
+    const flushInterval = setInterval(function () {
+      flushPendingPurchase();
+      if (sessionStorage.getItem(SESSION_KEY) === "1") {
+        clearInterval(flushInterval);
+      }
+    }, 500);
   })();
 </script>
 <noscript>
