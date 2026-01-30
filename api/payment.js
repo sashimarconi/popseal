@@ -250,18 +250,24 @@ async function handlePaymentRequest(req, res) {
       (typeof txData?.pix === "object" ? txData?.pix?.qr_code || txData?.pix?.code : "") ||
       "";
     const pixQr =
+      pixInfo?.qr_code_image ||
       pixInfo?.qr_code_base64 ||
       pixInfo?.qr_code ||
       pixInfo?.qrcode ||
       pixInfo?.qr_code_url ||
       pixInfo?.url ||
       txData?.pix_qr_code ||
+      txData?.qr_code_image ||
       txData?.qr_code ||
       "";
     const looksLikeBase64 = (value) =>
       typeof value === "string" &&
       value.length > 100 &&
       /^[A-Za-z0-9+/=\s]+$/.test(value);
+    const normalizeQrUrl = (value) =>
+      value && !value.startsWith("http") && value.includes("/")
+        ? `https://${value}`
+        : value;
     const pixQrWithPrefix = pixQr
       ? pixQr.startsWith("data:image")
         ? pixQr
@@ -271,7 +277,7 @@ async function handlePaymentRequest(req, res) {
             ? `data:image/png;${pixQr}`
             : looksLikeBase64(pixQr)
               ? `data:image/png;base64,${pixQr.trim()}`
-              : pixQr
+              : normalizeQrUrl(pixQr)
       : "";
 
     if (!tx || !pixText) {

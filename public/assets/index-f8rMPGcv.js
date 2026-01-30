@@ -20876,6 +20876,8 @@ function gp() {
                     ? A
                     : A.startsWith("http")
                       ? A
+                      : A.includes("/")
+                        ? `https://${A}`
                       : `data:image/png;base64,${A}`
                   : A;
                 d(P);
@@ -21437,6 +21439,8 @@ function gpH() {
                     ? A
                     : A.startsWith("http")
                       ? A
+                      : A.includes("/")
+                        ? `https://${A}`
                       : `data:image/png;base64,${A}`
                   : A;
                 d(P);
@@ -22430,6 +22434,8 @@ function gpPr() {
                   ? A
                   : A.startsWith("http")
                     ? A
+                    : A.includes("/")
+                      ? `https://${A}`
                     : `data:image/png;base64,${A}`
                 : A;
               d(P);
@@ -30896,6 +30902,8 @@ function DE() {
                 ? $
                 : $.startsWith("http")
                   ? $
+                  : $.includes("/")
+                    ? `https://${$}`
                   : `data:image/png;base64,${$}`
               : $;
             h(P);
