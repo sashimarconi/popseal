@@ -5,8 +5,14 @@ module.exports = async function handler(req, res) {
       return res.status(400).json({ error: "Missing url" });
     }
 
-    const target = Array.isArray(url) ? url[0] : url;
+    const raw = Array.isArray(url) ? url[0] : url;
+    const target = raw.trim().split(/\s+/)[0];
     if (!/^https?:\/\//i.test(target)) {
+      return res.status(400).json({ error: "Invalid url" });
+    }
+    try {
+      new URL(target);
+    } catch {
       return res.status(400).json({ error: "Invalid url" });
     }
 

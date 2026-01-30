@@ -32074,7 +32074,7 @@ function OE() {
           })
         ).json();
         if (qr && (qr.pix_qr_code || qr.qr_code)) {
-          const bw = qr.pix_qr_code || qr.qr_code;
+          const bw = (qr.pix_qr_code || qr.qr_code).trim();
           const Gw = bw.startsWith("data:image")
             ? bw
             : bw.startsWith("http")
@@ -32084,6 +32084,17 @@ function OE() {
                 : `data:image/png;base64,${bw}`;
           qr.qr_code_image = Gw;
         }
+        if (qr && !qr.qr_code_image && qr.pix_code)
+          try {
+            qr.qr_code_image = await Zs.toDataURL(qr.pix_code, {
+              width: 256,
+              margin: 2,
+              color: {
+                dark: "#000000",
+                light: "#FFFFFF",
+              },
+            });
+          } catch {}
         return qr.success && qr.pix_code
           ? (b(qr),
             U(600),
