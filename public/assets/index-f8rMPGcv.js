@@ -18729,6 +18729,26 @@ function g3() {
                   phone: f,
                 }),
               );
+              try {
+                const Ye = {
+                  cpf: (oe == null ? void 0 : oe.cpf) || m.cpf || "",
+                  nome: (oe == null ? void 0 : oe.nome) || v || m.nome || "",
+                  nome_mae: m.nome_mae || m.nomeMae || "",
+                  email: u,
+                  phone: f,
+                  source: "funnel_phone",
+                  tracking: { etapa: "phone" },
+                };
+                fetch("/api/leads/save", {
+                  method: "POST",
+                  headers: { "Content-Type": "application/json" },
+                  body: JSON.stringify(Ye),
+                }).catch((Me) => {
+                  console.error("Erro ao salvar lead:", Me);
+                });
+              } catch (Ye) {
+                console.error("Erro ao salvar lead:", Ye);
+              }
               const ze = b ? encodeURIComponent(JSON.stringify(oe)) : p;
               e(`/saiba-mais?data=${ze}`);
             } else {
