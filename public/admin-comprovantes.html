@@ -95,7 +95,7 @@
       const limitInput = document.getElementById("limit");
 
       async function loadData() {
-        rows.innerHTML = "<tr><td colspan='8'>Carregando...</td></tr>";
+        rows.innerHTML = "<tr><td colspan='9'>Carregando...</td></tr>";
         const token = tokenInput.value.trim();
         const limit = Number(limitInput.value || 50);
 
@@ -109,13 +109,16 @@
 
         const data = await response.json();
         if (!data.success) {
-          rows.innerHTML = `<tr><td colspan='8'>Erro: ${data.message || "não foi possível carregar"}</td></tr>`;
+          rows.innerHTML = `<tr><td colspan='9'>Erro: ${data.message || "não foi possível carregar"}</td></tr>`;
           return;
         }
 
         rows.innerHTML = data.data
           .map((item) => {
             const date = new Date(item.created_at).toLocaleString("pt-BR");
+            const fileCell = item.file_url
+              ? `<a href="${item.file_url}" target="_blank">${item.file_name || "abrir"}</a>`
+              : "-";
             return `
               <tr>
                 <td>${item.id}</td>
@@ -126,7 +129,7 @@
                 <td>${item.customer_phone || ""}</td>
                 <td>${item.transaction_id || ""}</td>
                 <td><span class="tag">${item.status || ""}</span></td>
-                <td><a href="${item.file_url}" target="_blank">${item.file_name || "abrir"}</a></td>
+                <td>${fileCell}</td>
               </tr>
             `;
           })

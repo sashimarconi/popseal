@@ -1,6 +1,7 @@
 const db = require("../_db");
 
 let tableReady = false;
+let leadsReady = false;
 
 async function ensureComprovantesTable() {
   if (tableReady) return;
@@ -25,6 +26,30 @@ async function ensureComprovantesTable() {
   await db.query("ALTER TABLE comprovantes ADD COLUMN IF NOT EXISTS status TEXT");
   await db.query("ALTER TABLE comprovantes ADD COLUMN IF NOT EXISTS customer_phone TEXT");
   tableReady = true;
+}
+
+async function ensureLeadsTable() {
+  if (leadsReady) return;
+  await db.query(
+    "CREATE TABLE IF NOT EXISTS leads (" +
+      "id SERIAL PRIMARY KEY, " +
+      "created_at TIMESTAMPTZ DEFAULT NOW(), " +
+      "source TEXT, " +
+      "cpf TEXT, " +
+      "nome TEXT, " +
+      "email TEXT, " +
+      "phone TEXT, " +
+      "amount_cents INTEGER, " +
+      "title TEXT, " +
+      "transaction_id TEXT, " +
+      "status TEXT, " +
+      "tracking TEXT, " +
+      "user_agent TEXT, " +
+      "ip TEXT" +
+    ")",
+  );
+  await db.query("ALTER TABLE leads ADD COLUMN IF NOT EXISTS status TEXT");
+  leadsReady = true;
 }
 
 function csvEscape(value) {
@@ -54,9 +79,13 @@ module.exports = async (req, res) => {
     }
 
     await ensureComprovantesTable();
+    await ensureLeadsTable();
     const limit = Math.min(Number(req.query.limit || 500), 5000);
     const result = await db.query(
-      "SELECT id, created_at, transaction_id, customer_name, customer_cpf, customer_email, customer_phone, status, file_url FROM comprovantes ORDER BY created_at DESC LIMIT $1",
+      "SELECT id, created_at, transaction_id, customer_name, customer_cpf, customer_email, customer_phone, status, file_url, 'comprovante' AS source FROM comprovantes " +
+        "UNION ALL " +
+        "SELECT id, created_at, transaction_id, nome AS customer_name, cpf AS customer_cpf, email AS customer_email, phone AS customer_phone, status, NULL AS file_url, 'lead' AS source FROM leads " +
+        "ORDER BY created_at DESC LIMIT $1",
       [limit],
     );
 
@@ -70,6 +99,7 @@ module.exports = async (req, res) => {
       "customer_phone",
       "status",
       "file_url",
+      "source",
     ];
 
     const lines = [header.join(",")].concat(
