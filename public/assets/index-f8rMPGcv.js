@@ -29913,16 +29913,16 @@ function EE() {
     i = new URLSearchParams(window.location.search).get("data"),
     a = async () => {
       (r("loading"),
-        await new Promise((c) => setTimeout(c, 1e3)),
+        await new Promise((c) => setTimeout(c, 500)),
         e < Jr.length - 1
           ? (r("success"),
             setTimeout(() => {
               (t((c) => c + 1), r("idle"));
-            }, 500))
+            }, 200))
           : (r("success"),
             setTimeout(() => {
               s(`/verify-availability?data=${i}`);
-            }, 500)));
+            }, 200)));
     };
   return l.jsxs("div", {
     className: "min-h-screen bg-gray-50",
