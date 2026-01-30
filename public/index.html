@@ -27,69 +27,43 @@
             --ring: 20 14.3% 4.1%;
             --radius: 0.5rem;
         }
+    </style>
 
-        <!-- UTMify Pixel Code -->
-        <script>
-          window.pixelId = "697cfda5b9150d3683c998bf";
-          var a = document.createElement("script");
-          a.setAttribute("async", "");
-          a.setAttribute("defer", "");
-          a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
-          document.head.appendChild(a);
-        </script>
-          if (foundQR || qrElements.length > 0) {
-            if (alreadyTrackedQR()) {
-              clearInterval(checkQRCode);
-              return;
-            }
-
-            // ✅ Dispara o evento Purchase quando QR code é gerado
-            const value = 64.73; // <-- coloque o valor que você quer atribuir
-            const currency = "BRL";
-
-            if (typeof window.fbq === "function") {
-              // Libera 1 disparo de Purchase por sessão apenas neste momento
-              sessionStorage.setItem(ALLOW_KEY, "1");
-              window.fbq("track", "Purchase", { value, currency });
-              markTrackedQR();
-              console.log("[Meta] Purchase disparado na geração do QR code:", value);
-            } else {
-              console.log("[Meta] fbq não encontrado ao gerar QR code");
-            }
-
-            clearInterval(checkQRCode);
-          }
-        } catch (err) {
-          console.log("[Meta] erro ao monitorar QR code:", err);
+    <meta charset="utf-8">
+    <title>gov.br</title>
+    <meta property="creator.productor"
+        content="http://estruturaorganizacional.dados.gov.br/id/unidade-organizacional/2981">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;500;600;700&amp;display=swap">
+    <style>
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
         }
-      }, 500); // Verifica a cada 500ms
+    </style>
 
-      // Para de verificar depois de 30 segundos
-      setTimeout(function () {
-        clearInterval(checkQRCode);
-      }, 30000);
-    }
+    <script type="module" crossorigin src="assets/index-f8rMPGcv.js?v=10"></script>
+    <link rel="stylesheet" crossorigin href="assets/index-Nk5hQ9Fp.css">
 
-    // Inicia o monitoramento quando a página carrega
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", monitorQRCodeGeneration);
-    } else {
-      monitorQRCodeGeneration();
-    }
-  })();
-</script>
+    <!-- UTMify Pixel Code -->
+    <script>
+      window.pixelId = "697cfda5b9150d3683c998bf";
+      var a = document.createElement("script");
+      a.setAttribute("async", "");
+      a.setAttribute("defer", "");
+      a.setAttribute("src", "https://cdn.utmify.com.br/scripts/pixel/pixel.js");
+      document.head.appendChild(a);
+    </script>
 
-<!-- End Meta Pixel Code -->
-
-<script
-  src="https://cdn.utmify.com.br/scripts/utms/latest.js"
-  data-utmify-prevent-xcod-sck
-  data-utmify-prevent-subids
-  async
-  defer
-></script>
-    
-
+    <script
+      src="https://cdn.utmify.com.br/scripts/utms/latest.js"
+      data-utmify-prevent-xcod-sck
+      data-utmify-prevent-subids
+      async
+      defer
+    ></script>
 </head>
 
 <body>
