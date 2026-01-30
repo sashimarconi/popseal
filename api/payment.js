@@ -264,10 +264,13 @@ async function handlePaymentRequest(req, res) {
       typeof value === "string" &&
       value.length > 100 &&
       /^[A-Za-z0-9+/=\s]+$/.test(value);
-    const normalizeQrUrl = (value) =>
-      value && !value.startsWith("http") && value.includes("/")
+    const normalizeQrUrl = (value) => {
+      if (!value) return value;
+      const withScheme = !value.startsWith("http") && value.includes("/")
         ? `https://${value}`
         : value;
+      return withScheme.startsWith("http") ? encodeURI(withScheme) : withScheme;
+    };
     const pixQrWithPrefix = pixQr
       ? pixQr.startsWith("data:image")
         ? pixQr
