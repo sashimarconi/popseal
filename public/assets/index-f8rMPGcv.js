@@ -18918,11 +18918,6 @@ function g3() {
               l.jsxs("div", {
                 className: "flex items-center gap-3 mb-4",
                 children: [
-                  l.jsx("div", {
-                    className:
-                      "flex items-center justify-center w-6 h-6 rounded-full bg-[#1351B4] text-white text-sm font-medium",
-                    children: D.number,
-                  }),
                   l.jsx("p", {
                     className: "font-semibold text-base",
                     children: "Programa CNH do Brasil",
@@ -18933,7 +18928,8 @@ function g3() {
                 className: "bg-white rounded-2xl shadow-md p-6 w-full",
                 children: [
                   l.jsx("p", {
-                    className: "text-sm text-gray-600 mb-3",
+                    className:
+                      "text-base text-gray-900 font-semibold text-center mb-4",
                     children:
                       "Confirme seus dados para o cadastro no Programa CNH do Brasil",
                   }),
