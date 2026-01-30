@@ -18917,12 +18917,7 @@ function g3() {
             children: [
               l.jsxs("div", {
                 className: "flex items-center gap-3 mb-4",
-                children: [
-                  l.jsx("p", {
-                    className: "font-semibold text-base",
-                    children: "Programa CNH do Brasil",
-                  }),
-                ],
+                children: [],
               }),
               l.jsxs("div", {
                 className: "bg-white rounded-2xl shadow-md p-6 w-full",
