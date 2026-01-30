@@ -20880,20 +20880,34 @@ function gp() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code || j.qr_code)) {
-                const A = j.pix_qr_code || j.qr_code;
-                const P = A
-                  ? A.startsWith("data:image")
+              n(j);
+              const A = j.pix_qr_code || j.qr_code;
+              if (A) {
+                if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
+                  try {
+                    const P = await Zs.toDataURL(A, {
+                      width: 256,
+                      margin: 2,
+                      color: {
+                        dark: "#000000",
+                        light: "#FFFFFF",
+                      },
+                    });
+                    d(P);
+                  } catch (P) {
+                    console.error("Erro ao gerar QR code:", P);
+                  }
+                } else {
+                  const P = A.startsWith("data:image")
                     ? A
                     : A.startsWith("http")
                       ? `/api/qr?u=${encodeURIComponent(A)}`
                       : A.includes("/")
                         ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
-                      : `data:image/png;base64,${A}`
-                  : A;
-                d(P);
-              }
-              else if (j.pix_code)
+                        : `data:image/png;base64,${A}`;
+                  d(P);
+                }
+              } else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
                     width: 256,
@@ -21443,20 +21457,34 @@ function gpH() {
                 })
               ).json();
             if (j.success) {
-              if ((n(j), j.pix_qr_code || j.qr_code)) {
-                const A = j.pix_qr_code || j.qr_code;
-                const P = A
-                  ? A.startsWith("data:image")
+              n(j);
+              const A = j.pix_qr_code || j.qr_code;
+              if (A) {
+                if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
+                  try {
+                    const P = await Zs.toDataURL(A, {
+                      width: 256,
+                      margin: 2,
+                      color: {
+                        dark: "#000000",
+                        light: "#FFFFFF",
+                      },
+                    });
+                    d(P);
+                  } catch (P) {
+                    console.error("Erro ao gerar QR code:", P);
+                  }
+                } else {
+                  const P = A.startsWith("data:image")
                     ? A
                     : A.startsWith("http")
                       ? `/api/qr?u=${encodeURIComponent(A)}`
                       : A.includes("/")
                         ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
-                      : `data:image/png;base64,${A}`
-                  : A;
-                d(P);
-              }
-              else if (j.pix_code)
+                        : `data:image/png;base64,${A}`;
+                  d(P);
+                }
+              } else if (j.pix_code)
                 try {
                   const A = await Zs.toDataURL(j.pix_code, {
                     width: 256,
@@ -22438,20 +22466,34 @@ function gpPr() {
               })
             ).json();
           if (j.success) {
-            if ((n(j), j.pix_qr_code || j.qr_code)) {
-              const A = j.pix_qr_code || j.qr_code;
-              const P = A
-                ? A.startsWith("data:image")
+            n(j);
+            const A = j.pix_qr_code || j.qr_code;
+            if (A) {
+              if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
+                try {
+                  const P = await Zs.toDataURL(A, {
+                    width: 256,
+                    margin: 2,
+                    color: {
+                      dark: "#000000",
+                      light: "#FFFFFF",
+                    },
+                  });
+                  d(P);
+                } catch (P) {
+                  console.error("Erro ao gerar QR code:", P);
+                }
+              } else {
+                const P = A.startsWith("data:image")
                   ? A
                   : A.startsWith("http")
                     ? `/api/qr?u=${encodeURIComponent(A)}`
                     : A.includes("/")
                       ? `/api/qr?u=${encodeURIComponent(`https://${A}`)}`
-                    : `data:image/png;base64,${A}`
-                : A;
-              d(P);
-            }
-            else if (j.pix_code)
+                      : `data:image/png;base64,${A}`;
+                d(P);
+              }
+            } else if (j.pix_code)
               try {
                 const A = await Zs.toDataURL(j.pix_code, {
                   width: 256,
@@ -32102,7 +32144,18 @@ function OE() {
         if (qr && (qr.pix_qr_code || qr.qr_code)) {
           const bw = (qr.pix_qr_code || qr.qr_code).trim();
           const bwNoScheme = bw.replace(/^https?:\/\//, "");
-          if (!bwNoScheme.startsWith("000201")) {
+          if (bwNoScheme.startsWith("000201") || bw.includes("br.gov.bcb.pix")) {
+            try {
+              qr.qr_code_image = await Zs.toDataURL(bw, {
+                width: 256,
+                margin: 2,
+                color: {
+                  dark: "#000000",
+                  light: "#FFFFFF",
+                },
+              });
+            } catch {}
+          } else {
             const Gw = bw.startsWith("data:image")
               ? bw
               : bw.startsWith("http")
