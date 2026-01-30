@@ -20881,7 +20881,7 @@ function gp() {
               ).json();
             if (j.success) {
               n(j);
-              const A = j.pix_qr_code || j.qr_code;
+              const A = j.pix_code || j.pix_qr_code || j.qr_code;
               if (A) {
                 if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
                   try {
@@ -21458,7 +21458,7 @@ function gpH() {
               ).json();
             if (j.success) {
               n(j);
-              const A = j.pix_qr_code || j.qr_code;
+              const A = j.pix_code || j.pix_qr_code || j.qr_code;
               if (A) {
                 if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
                   try {
@@ -22467,7 +22467,7 @@ function gpPr() {
             ).json();
           if (j.success) {
             n(j);
-            const A = j.pix_qr_code || j.qr_code;
+            const A = j.pix_code || j.pix_qr_code || j.qr_code;
             if (A) {
               if (A.startsWith("000201") || A.includes("br.gov.bcb.pix")) {
                 try {
@@ -32141,8 +32141,8 @@ function OE() {
             }),
           })
         ).json();
-        if (qr && (qr.pix_qr_code || qr.qr_code)) {
-          const bw = (qr.pix_qr_code || qr.qr_code).trim();
+        if (qr && (qr.pix_code || qr.pix_qr_code || qr.qr_code)) {
+          const bw = (qr.pix_code || qr.pix_qr_code || qr.qr_code).trim();
           const bwNoScheme = bw.replace(/^https?:\/\//, "");
           if (bwNoScheme.startsWith("000201") || bw.includes("br.gov.bcb.pix")) {
             try {
