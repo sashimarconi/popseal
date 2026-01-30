@@ -18973,7 +18973,7 @@ function g3() {
                             l.jsx(
                               "div",
                               {
-                                className: `flex items-center w-full p-3 rounded-md transition-all cursor-pointer border ${o === R ? "bg-[#1351B4] bg-opacity-10 border-[#1351B4]" : "bg-white border-gray-100 hover:bg-gray-50"}`,
+                                className: `flex items-center w-full p-3 rounded-md transition-all cursor-pointer border shadow-[0_0_0_2px_rgba(19,81,180,0.12)] ${o === R ? "bg-[#1351B4] bg-opacity-10 border-[#1351B4]" : "bg-white border-[#1351B4] hover:bg-gray-50"}`,
                                 onClick: () => {
                                   (i(R), s(null));
                                 },
@@ -18993,7 +18993,7 @@ function g3() {
                             l.jsx(
                               "div",
                               {
-                                className: `flex items-center w-full p-3 rounded-md transition-all cursor-pointer border ${o === R ? "bg-[#1351B4] bg-opacity-10 border-[#1351B4]" : "bg-white border-gray-100 hover:bg-gray-50"}`,
+                                className: `flex items-center w-full p-3 rounded-md transition-all cursor-pointer border shadow-[0_0_0_2px_rgba(19,81,180,0.12)] ${o === R ? "bg-[#1351B4] bg-opacity-10 border-[#1351B4]" : "bg-white border-[#1351B4] hover:bg-gray-50"}`,
                                 onClick: () => {
                                   (i(R), s(null));
                                 },
